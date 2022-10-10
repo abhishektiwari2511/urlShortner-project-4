@@ -7,7 +7,7 @@ app.use(express.json())
 
 
 
-mongoose.connect('mongodb+srv://kasarvaibhav777:VqAQ4xWgRUOXRW7N@cluster0.y2iweu3.mongodb.net/Project-04', {
+mongoose.connect('mongodb://abhishek251119:abhishek2511@ac-z8sfqfr-shard-00-00.2zhuz3d.mongodb.net:27017,ac-z8sfqfr-shard-00-01.2zhuz3d.mongodb.net:27017,ac-z8sfqfr-shard-00-02.2zhuz3d.mongodb.net:27017/test?replicaSet=atlas-4htqnt-shard-0&ssl=true&authSource=admin', {
     useNewUrlParser: true
 })
 .then( ()=> console.log("MongoDb is connected"))

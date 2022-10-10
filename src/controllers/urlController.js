@@ -6,11 +6,11 @@ const { promisify } = require("util");
 //------------------------------------redis config-----------------------------------//
 
 const redisClient = redis.createClient(
-  10645,
-  "redis-10645.c301.ap-south-1-1.ec2.cloud.redislabs.com",
+  14738,
+  "redis-14738.c264.ap-south-1-1.ec2.cloud.redislabs.com",
   { no_ready_check: true }
 );
-redisClient.auth("x3nVz7zjAArrQ8D0Q4Zl0elufm2nlLbB", function (err) {
+redisClient.auth("t0EwLXPNvD5yNMBjOrQfLMGCIkbtKT38", function (err) {
   if (err) throw err;
 });
 
@@ -25,7 +25,8 @@ const GET_ASYNC = promisify(redisClient.GET).bind(redisClient);
 
 const createShorturl = async function (req, res) {
   try {
-    let originalUrl = req.body.longUrl;
+    let originalUrl = req.body.longUrl
+    
     if (!originalUrl) {
       return res
         .status(400)
@@ -59,6 +60,7 @@ const createShorturl = async function (req, res) {
       let urlData = JSON.parse(cachedUrl);
       return res.status(200).send({
         status: true,
+        dataComing:"data come to caching",
         msg: "Url already exist in redis",
         data: urlData,
       });
@@ -70,14 +72,21 @@ const createShorturl = async function (req, res) {
       await SET_ASYNC(`${uniqueUrl.longUrl}`, JSON.stringify({ uniqueUrl }));
       return res.status(200).send({
         status: true,
+        dataComing:"data coming from mongosedb and set for caching",
         msg: "Url already exist in database",
         data: uniqueUrl,
       });
     }
     let savedUrl = await urlModel.create(output);
+    const abhi ={
+    urlCode:savedUrl.urlCode,
+    longUrl:savedUrl.longUrl,
+  shortUrl:savedUrl.shortUrl
+}
+  console.log(abhi)
     return res
       .status(201)
-      .send({ status: true, msg: "Created data successfully", data: savedUrl });
+      .send({ status: true, msg: "Created data successfully",dataGoing:"data is going in db", data: abhi });
   } catch (err) {
     res.status(500).send({ status: false, msg: err.message });
   }
@@ -101,7 +110,8 @@ const fetchUrlData = async function (req, res) {
     }
     await SET_ASYNC(`${req.params.urlCode}`, JSON.stringify(findURL));
     return res.status(302).redirect(findURL.longUrl);
-  } catch (err) {
+  
+} catch (err) {
     res.status(500).send({
       status: false,
       msg: err.message,
